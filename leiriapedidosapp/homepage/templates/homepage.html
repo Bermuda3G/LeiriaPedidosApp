@@ -2,6 +2,30 @@
 
 {% block content %}
 
-<h1>LeiriaPedidosApp homepage</h1>
+<div class="col-md-6 offset-md-3">
+
+{% if user.is_authenticated%}
+
+<h1 class="text-center">LeiriaPedidosApp Homepage :D </h1>
+
+{% else %}
+
+<h1 class="text-center">LeiriaPedidosApp</h1>
+<h2 class="text-center">Login</h2>
+<br/>
+<form method="POST" action="{% url 'homepage' %}">
+  {% csrf_token %} <!--Token que garante que as requisições estão sendo feitas pelo usuário autenticado-->
+  <div class="mb-3">
+    <input type="text" class="form-control" name="username", placeholder="Nome de Usuário" required>
+  </div>
+  <div class="mb-3">
+    <input type="password" class="form-control" name="password", placeholder="Senha" required>
+  </div>
+  <button type="submit" class="btn btn-secondary">Entrar</button>
+</form>
+
+{% endif %}
+
+</div>
 
 {% endblock %}
