@@ -1,2 +1,2 @@
-dir_to_ignore/virt
+virt/
 ignore-test.txt
