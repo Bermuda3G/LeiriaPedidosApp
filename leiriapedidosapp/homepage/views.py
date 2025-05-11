@@ -18,10 +18,11 @@ def home(request):
             messages.success(request, "Não foi possível concluir o processo de Login. Tente novamente.")
             return redirect('homepage')
     else:
+        print(f'essa é a minha request: {request}')
         return render(request, 'homepage.html', {})
 
-#def login_user(request):
-    #pass
-
-#def logout_user(request):
-    #pass
+def logout_user(request):
+    print(f'essa é')
+    logout(request)
+    messages.success(request, "Logout feito com sucesso! Até logo :D")
+    return redirect('homepage')
