@@ -1,0 +1,13 @@
+*PREPARANDO BANCO DE DADOS
+    fazemos alterações no bloco DATABASES em settings.py, uma vez que o django, por padrão,
+    django uiliza o sqlite3 (e estamos utilizando o MySQL)
+
+    instalamos o MySQL no computador
+
+    rodamos o file mydb.py (em leiriapedidosapp)
+
+    o database é criado (podemos conferir no nosso MySQL Workbench)
+
+    rodamos no terminal o comando 'python manage.py migrate' para fazer a migração dos recursos
+    database do django para o MySQL
+    
