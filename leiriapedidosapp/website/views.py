@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .models import Produto
 
 # Create your views here.
 def home(request):
+    produtos = Produto.objects.all()
+
     #Checa se o usuário está loggado
     if request.method == 'POST':
         username = request.POST['username']
@@ -19,7 +22,7 @@ def home(request):
             return redirect('homepage')
     else:
         print(f'essa é a minha request: {request}')
-        return render(request, 'homepage.html', {})
+        return render(request, 'homepage.html', {'produtos':produtos})
 
 def logout_user(request):
     print(f'essa é')
