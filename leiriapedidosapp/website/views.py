@@ -21,11 +21,17 @@ def home(request):
             messages.success(request, "Não foi possível concluir o processo de Login. Tente novamente.")
             return redirect('homepage')
     else:
-        print(f'essa é a minha request: {request}')
         return render(request, 'homepage.html', {'produtos':produtos})
 
 def logout_user(request):
-    print(f'essa é')
     logout(request)
     messages.success(request, "Logout feito com sucesso! Até logo :D")
     return redirect('homepage')
+
+def produto_item(request, pk):
+    if request.user.is_authenticated:
+        registro_produto = Produto.objects.get(id=pk)
+        return render(request, 'produto.html', {'registro_produto':registro_produto})
+    else:
+        messages.success(request, "Não foi possível acessar o produto. Faça login novamente!!")
+        return redirect('homepage')
