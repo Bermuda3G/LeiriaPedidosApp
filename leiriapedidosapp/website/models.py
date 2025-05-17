@@ -15,7 +15,7 @@ class Produto(models.Model):
         default='UNIDADE'
     )
     preco = models.DecimalField(max_digits=6, decimal_places=2)
-    oberservacoes = models.TextField(blank=True, null=True)
+    observacoes = models.TextField(max_length=75, blank=True, null=True)
 
     def __str__(self):
         return(f"{self.nome}")

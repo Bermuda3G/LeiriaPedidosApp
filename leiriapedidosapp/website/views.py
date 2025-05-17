@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from .models import Produto
+from .forms import ProdutoForm
 
 # Create your views here.
 def home(request):
@@ -35,3 +37,18 @@ def produto_item(request, pk):
     else:
         messages.success(request, "Não foi possível acessar o produto. Faça login novamente!!")
         return redirect('homepage')
+    
+def add_produto(request):
+    submitted = False
+    if request.method == "POST":
+        form = ProdutoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/registrar-produto?submitted=True')
+    else:
+        form = ProdutoForm
+        if 'submitted' in request.GET:
+            submitted=True
+    
+    return render(request, 'add_produto.html', {'form':form, 'submitted':submitted})
+    
