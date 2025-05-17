@@ -1,9 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.http import HttpResponseRedirect
+from .models import Produto
+from .forms import ProdutoForm
 
 # Create your views here.
 def home(request):
+    produtos = Produto.objects.all()
+
     #Checa se o usuário está loggado
     if request.method == 'POST':
         username = request.POST['username']
@@ -18,11 +23,32 @@ def home(request):
             messages.success(request, "Não foi possível concluir o processo de Login. Tente novamente.")
             return redirect('homepage')
     else:
-        print(f'essa é a minha request: {request}')
-        return render(request, 'homepage.html', {})
+        return render(request, 'homepage.html', {'produtos':produtos})
 
 def logout_user(request):
-    print(f'essa é')
     logout(request)
     messages.success(request, "Logout feito com sucesso! Até logo :D")
     return redirect('homepage')
+
+def produto_item(request, pk):
+    if request.user.is_authenticated:
+        registro_produto = Produto.objects.get(id=pk)
+        return render(request, 'produto.html', {'registro_produto':registro_produto})
+    else:
+        messages.success(request, "Não foi possível acessar o produto. Faça login novamente!!")
+        return redirect('homepage')
+    
+def add_produto(request):
+    submitted = False
+    if request.method == "POST":
+        form = ProdutoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/registrar-produto?submitted=True')
+    else:
+        form = ProdutoForm
+        if 'submitted' in request.GET:
+            submitted=True
+    
+    return render(request, 'add_produto.html', {'form':form, 'submitted':submitted})
+    

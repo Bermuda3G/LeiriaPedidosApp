@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Registro de Produto</h1>
+<h2>{{ registro_produto }}</h2>
+
+    {{ registro_produto.id }}</br>
+    {{ registro_produto.nome }}</br>
+    {{ registro_produto.medido_por }}</br>
+    R${{ registro_produto.preco }}</br>
+    {{ registro_produto.observacoes }}</br>
+
+{% endblock %}
