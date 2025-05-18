@@ -52,3 +52,11 @@ def add_produto(request):
     
     return render(request, 'add_produto.html', {'form':form, 'submitted':submitted})
     
+def update_produto(request, pk):
+    registro_produto = Produto.objects.get(id=pk)
+    form = ProdutoForm(request.POST or None, instance=registro_produto)
+    if form.is_valid():
+        form.save()
+        return redirect('homepage')
+    
+    return render(request, 'update_produto.html', {'registro_produto':registro_produto, 'form':form})

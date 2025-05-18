@@ -2,13 +2,21 @@
 
 {% block content %}
 
-<h1>Registro de Produto</h1>
-<h2>{{ registro_produto }}</h2>
+<center>
+    <h1>Registro de Produto</h1>
+    <h3>{{ registro_produto }}</h3><br/>
+    <a href="{% url 'atualizar-produto' registro_produto.id %}" class="btn btn-secondary" role="button">Atualizar Produto</a>
+    <a href="#" class="btn btn-secondary" role="button">Excluir Produto</a>
+</center>
 
-    {{ registro_produto.id }}</br>
-    {{ registro_produto.nome }}</br>
-    {{ registro_produto.medido_por }}</br>
-    R${{ registro_produto.preco }}</br>
-    {{ registro_produto.observacoes }}</br>
+    <ul class="nav justify-content-start">
+        <h5>
+                Id:   {{ registro_produto.id }}</br>
+                Nome:   {{ registro_produto.nome }}</br>
+                Unidade:   {{ registro_produto.medido_por }}</br>
+                Preço:   R${{ registro_produto.preco }}</br>
+                Observações:   {{ registro_produto.observacoes }}</br>
+        </h5>
+    </ul>
 
 {% endblock %}
