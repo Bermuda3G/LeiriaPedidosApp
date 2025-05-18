@@ -6,7 +6,7 @@
     <h1>Registro de Produto</h1>
     <h3>{{ registro_produto }}</h3><br/>
     <a href="{% url 'atualizar-produto' registro_produto.id %}" class="btn btn-secondary" role="button">Atualizar Produto</a>
-    <a href="#" class="btn btn-secondary" role="button">Excluir Produto</a>
+    <a href="{% url 'deletar-produto' registro_produto.id %}" class="btn btn-outline-danger" role="button">Excluir Produto</a>
 </center>
 
     <ul class="nav justify-content-start">

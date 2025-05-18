@@ -60,3 +60,8 @@ def update_produto(request, pk):
         return redirect('homepage')
     
     return render(request, 'update_produto.html', {'registro_produto':registro_produto, 'form':form})
+
+def delete_produto(request, pk):
+    registro_produto = Produto.objects.get(id=pk)
+    registro_produto.delete()
+    return redirect('homepage')
