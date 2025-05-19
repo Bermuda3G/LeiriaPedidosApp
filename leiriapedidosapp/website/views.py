@@ -7,8 +7,6 @@ from .forms import ProdutoForm
 
 # Create your views here.
 def home(request):
-    produtos = Produto.objects.all()
-
     #Checa se o usuário está loggado
     if request.method == 'POST':
         username = request.POST['username']
@@ -23,12 +21,20 @@ def home(request):
             messages.success(request, "Não foi possível concluir o processo de Login. Tente novamente.")
             return redirect('homepage')
     else:
-        return render(request, 'homepage.html', {'produtos':produtos})
+        return render(request, 'homepage.html')
 
 def logout_user(request):
     logout(request)
     messages.success(request, "Logout feito com sucesso! Até logo :D")
     return redirect('homepage')
+
+def all_produtos(request):
+    if request.user.is_authenticated:
+        produtos = Produto.objects.all()
+        return render(request, 'produtos_todos.html', {'produtos':produtos})
+    else:
+        messages.success(request, "Não foi possível visualizar os produtos. Faça login novamente!!")
+        return redirect('homepage')
 
 def produto_item(request, pk):
     if request.user.is_authenticated:
