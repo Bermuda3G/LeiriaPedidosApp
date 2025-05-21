@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from .models import Produto
+from .models import Produto, Pedido
 from .forms import ProdutoForm
 
 # Create your views here.
