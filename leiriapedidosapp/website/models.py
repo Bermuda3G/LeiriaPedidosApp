@@ -27,6 +27,8 @@ class Pedido(models.Model):
     endereco_entrega = models.TextField(max_length=100)
     produtos = models.ManyToManyField(Produto, through="ItemPedido")
     valor = models.DecimalField(default=0.00, max_digits=6, decimal_places=2)
+    data_entrega = models.DateField(null=True)
+    hora_entrega = models.TimeField(null=True)
     observacoes = models.TextField(max_length=100)
 
     def __str__(self):
@@ -35,10 +37,4 @@ class Pedido(models.Model):
 class ItemPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    quantidade = models.DecimalField(
-        max_digits=6,
-        decimal_places=2
-    )
-
-    def __str__(self):
-        return(f"{self.produto.nome} X {self.quantidade}")
+    quantidade = models.PositiveIntegerField()

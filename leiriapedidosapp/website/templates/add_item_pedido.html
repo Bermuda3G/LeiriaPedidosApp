@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<center>
+    <h1>Pedido #{{ pedido.id }} de {{ pedido.nome_cliente }}</h1>
+</center>
+<br/><br/>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="add_more" value="Adicionar outro produto" class="btn btn-secondary">
+    <input type="submit" name="next_step" value="Próxima etapa" class="btn btn-secondary">
+</form>
+<br/>
+
+
+{% endblock %}

@@ -11,4 +11,6 @@ urlpatterns = [
     path('deletar-produto/<int:pk>', views.delete_produto, name='deletar-produto'),
 
     path('registrar-pedido', views.add_pedido_1, name='add-pedido'),
+    path('registrar-itens-pedido', views.add_item_pedido, name='add-item-pedido'),
+    path('registrar-observacoes-pedido', views.add_pedido_obs, name='add-obs')
 ]
