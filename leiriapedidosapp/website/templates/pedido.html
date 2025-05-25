@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<center>
+    <h1>Registro de Pedido</h1>
+    <h3>{{ registro_pedido }}</h3><br/>
+    <a href="#" class="btn btn-secondary" role="button">Atualizar Pedido</a>
+    <a href="#" class="btn btn-outline-danger" role="button">Excluir Pedido</a>
+</center>
+
+    <ul class="nav justify-content-start">
+        <h5>
+                Id:   {{ registro_pedido.id }}<br/><br/>
+                Nome do Cliente:   {{ registro_pedido.nome_cliente }}<br/><br/>
+                Número do Cliente:   {{ registro_pedido.numero_cliente }}<br/><br/>
+                Endereço do Cliente:   {{ registro_pedido.endereco_cliente }}<br/><br/>
+                Endereço da Entrega:   {{ registro_pedido.endereco_entrega }}<br/><br/>
+                Produtos:<br/><br/>
+                {% for item in itens_pedido %}
+                    ******** {{ item.produto.nome }} X{{ item.quantidade }}<br/>
+                {% endfor %}<br/><br/>
+                Valor:   R${{ registro_pedido.valor }}<br/><br/>    
+                Observações:   {{ registro_pedido.observacoes }}<br/>
+        </h5>
+    </ul>
+
+{% endblock %}

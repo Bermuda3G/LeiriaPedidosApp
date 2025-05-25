@@ -10,6 +10,8 @@ urlpatterns = [
     path('atualizar-produto/<int:pk>', views.update_produto, name='atualizar-produto'),
     path('deletar-produto/<int:pk>', views.delete_produto, name='deletar-produto'),
 
+    path('pedidos-todos', views.all_pedidos, name='pedidos-todos'),
+    path('pedido/<int:pk>', views.pedido_read, name='pedido'),
     path('registrar-pedido', views.add_pedido_1, name='add-pedido'),
     path('registrar-itens-pedido', views.add_item_pedido, name='add-item-pedido'),
     path('registrar-observacoes-pedido', views.add_pedido_obs, name='add-obs')
