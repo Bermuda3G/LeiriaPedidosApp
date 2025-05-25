@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from .models import Produto
-from .forms import ProdutoForm
+from .models import Produto, Pedido
+from .forms import ProdutoForm, PedidoForm_1, ItemPedidoForm, PedidoForm_2
 
-# Create your views here.
 def home(request):
+    #Debug
+    print(request.session.get('pedido_id'))
     #Checa se o usuário está loggado
     if request.method == 'POST':
         username = request.POST['username']
@@ -70,4 +71,61 @@ def update_produto(request, pk):
 def delete_produto(request, pk):
     registro_produto = Produto.objects.get(id=pk)
     registro_produto.delete()
-    return redirect('homepage')
+    return redirect(request, 'homepage')
+
+def add_pedido_1(request):
+    submitted = False
+    if request.method == "POST":
+        form = PedidoForm_1(request.POST)
+        if form.is_valid():
+            pedido = form.save()
+            request.session['pedido_id'] = pedido.id 
+            request.session['valor_total'] = 0
+            return redirect('add-item-pedido')
+           
+    else:
+        form = PedidoForm_1
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'add_pedido_1.html', {'form':form, 'submitted':submitted}) #PARA O FINAL DO REGISTRO DE PEDIDO
+
+def add_item_pedido(request):
+    pk = request.session.get('pedido_id')
+    pedido = Pedido.objects.get(id=pk)
+    if request.method == "POST":
+        form = ItemPedidoForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.pedido_id = pk
+            #Calcula valor
+            valor_total = request.session.get('valor_total')
+            valor_total += float(item.produto.preco) * item.quantidade
+            request.session['valor_total'] = valor_total
+            #Fim do cálculo
+            item.save()
+            if 'add_more' in request.POST:
+                return redirect('add-item-pedido')
+            elif 'next_step' in request.POST:
+                return redirect('add-obs')
+        
+    else:
+        form = ItemPedidoForm
+    
+    return render(request, 'add_item_pedido.html', {'form':form, 'pedido':pedido})
+
+def add_pedido_obs(request):
+    pk = request.session.get('pedido_id')
+    pedido = Pedido.objects.get(id=pk)
+    if request.method == "POST":
+        form = PedidoForm_2(request.POST, instance=pedido)
+        if form.is_valid():
+            pedido.valor = request.session.get('valor_total')
+            pedido.data_entrega = form.cleaned_data['data_entrega']
+            pedido.observacoes = form.cleaned_data['observacoes']
+            form.save()
+            return HttpResponseRedirect('/registrar-pedido?submitted=True')
+        
+    else:
+        form = PedidoForm_2
+    return render(request, 'add_obs_pedido.html', {'form': form, 'pedido':pedido})
