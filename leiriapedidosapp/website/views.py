@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from .models import Produto, Pedido
+from .models import Produto, Pedido, ItemPedido
 from .forms import ProdutoForm, PedidoForm_1, ItemPedidoForm, PedidoForm_2
 
 def home(request):
@@ -72,6 +72,30 @@ def delete_produto(request, pk):
     registro_produto = Produto.objects.get(id=pk)
     registro_produto.delete()
     return redirect(request, 'homepage')
+
+def all_pedidos(request):
+    if request.user.is_authenticated:
+        pedidos = Pedido.objects.all()
+        return render(request, 'pedidos_todos.html', {'pedidos':pedidos})
+    else:
+        messages.success(request, "Não foi possível visualizar os pedidos. Faça login novamente!!")
+        return redirect('homepage')
+    
+def pedido_read(request, pk):
+    if request.user.is_authenticated:
+        registro_pedido = Pedido.objects.get(id=pk)
+        itens_pedido = ItemPedido.objects.filter(pedido_id=pk)
+        return render(
+            request,
+            'pedido.html',
+            {
+                'registro_pedido':registro_pedido,
+                'itens_pedido': itens_pedido
+            }
+        )
+    else:
+        messages.success(request, "Não foi possível acessar o pedido. Faça login novamente!!")
+        return redirect('homepage')
 
 def add_pedido_1(request):
     submitted = False
