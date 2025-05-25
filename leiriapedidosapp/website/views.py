@@ -3,10 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from .models import Produto, Pedido
-from .forms import ProdutoForm
+from .forms import ProdutoForm, PedidoForm_1
 
-# Create your views here.
 def home(request):
+    #Debug
+    print(request.session.get('pedido_id'))
     #Checa se o usuário está loggado
     if request.method == 'POST':
         username = request.POST['username']
@@ -70,4 +71,19 @@ def update_produto(request, pk):
 def delete_produto(request, pk):
     registro_produto = Produto.objects.get(id=pk)
     registro_produto.delete()
-    return redirect('homepage')
+    return redirect(request, 'homepage')
+
+def add_pedido_1(request):
+    submitted = False
+    if request.method == "POST":
+        form = PedidoForm_1(request.POST)
+        if form.is_valid():
+            pedido = form.save()
+            request.session['pedido_id'] = pedido.id 
+            return redirect('homepage')
+           
+    else:
+        form = PedidoForm_1
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'add_pedido_1.html', {'form':form, 'submitted':submitted})

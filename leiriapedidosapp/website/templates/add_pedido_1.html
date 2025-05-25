@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<center>
+    <h1>Registrar Pedido</h1>
+</center>
+<br/><br/>
+{% if submitted %}
+    <center>
+        Novo pedido registrado com sucesso!<br/><br/>
+        <a href="{% url 'homepage' %}" class="btn btn-secondary">Voltar</a>
+    </center>
+{% else %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Registrar" class="btn btn-secondary">
+    </form>
+{% endif %}
+
+{% endblock %}

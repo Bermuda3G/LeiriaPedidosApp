@@ -9,4 +9,6 @@ urlpatterns = [
     path('registrar-produto', views.add_produto, name='add-produto'),
     path('atualizar-produto/<int:pk>', views.update_produto, name='atualizar-produto'),
     path('deletar-produto/<int:pk>', views.delete_produto, name='deletar-produto'),
+
+    path('registrar-pedido', views.add_pedido_1, name='add-pedido'),
 ]
