@@ -69,9 +69,16 @@ def update_produto(request, pk):
     return render(request, 'update_produto.html', {'registro_produto':registro_produto, 'form':form})
 
 def delete_produto(request, pk):
-    registro_produto = Produto.objects.get(id=pk)
-    registro_produto.delete()
-    return redirect(request, 'homepage')
+    if request.user.is_authenticated:
+        registro_produto = Produto.objects.get(id=pk)
+        registro_produto.delete()
+        messages.success(request, "Produto deletado com sucesso!!")
+        return render(request, 'homepage.html')
+    else:
+        messages.success(request, "Não foi possível deletar o produto. Faça login novamente!!")
+        return redirect('homepage')
+
+#****************************** VIEWS PEDIDOS***********************************
 
 def all_pedidos(request):
     if request.user.is_authenticated:
@@ -153,3 +160,13 @@ def add_pedido_obs(request):
     else:
         form = PedidoForm_2
     return render(request, 'add_obs_pedido.html', {'form': form, 'pedido':pedido})
+
+def delete_pedido(request, pk):
+    if request.user.is_authenticated:
+        registro_pedido = Pedido.objects.get(id=pk)
+        registro_pedido.delete()
+        messages.success(request, "Pedido deletado com sucesso!!")
+        return render(request, 'homepage.html')
+    else:
+        messages.success(request, "Não foi possível deletar o pedido. Faça login novamente!!")
+        return redirect('homepage')
