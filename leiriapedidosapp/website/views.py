@@ -161,6 +161,49 @@ def add_pedido_obs(request):
         form = PedidoForm_2
     return render(request, 'add_obs_pedido.html', {'form': form, 'pedido':pedido})
 
+def update_pedido(request, pk):
+    updated = request.session.get('pedido_atualizado')
+    registro_pedido = Pedido.objects.get(id=pk)
+    form = PedidoForm_1(request.POST or None, instance=registro_pedido)
+    if form.is_valid():
+        form.save()
+        request.session['pedido_id'] = pk
+        return redirect('itens-a-atualizar')
+    
+    if updated:
+        request.session['pedido_atualizado'] = False
+        messages.success(request, "Pedido atualizado com sucesso!!")
+        return redirect('homepage')
+    else:
+        return render(request, 'update_pedido_1.html', {'registro_pedido':registro_pedido, 'form':form})
+
+def see_itens_to_update(request):
+    pk = request.session.get('pedido_id')
+    itens = ItemPedido.objects.filter(pedido_id=pk)
+    return render(request, 'itens_to_update.html', {'itens':itens, 'pedido_id':pk})
+
+def update_item_pedido(request, item_pk):
+    pedido_id = request.session.get('pedido_id')
+    registro_item = ItemPedido.objects.get(id=item_pk)
+    form = ItemPedidoForm(request.POST or None, instance=registro_item)
+    if form.is_valid():
+        form.save() 
+        itens = ItemPedido.objects.filter(pedido_id=pedido_id)
+        return render(request, 'itens_to_update.html', {'itens':itens, 'pedido_id':pedido_id})
+    
+    return render(request, 'update_item.html', {'registro_item':registro_item, 'form':form})
+
+def update_pedido_obs(request, pk):
+    request.session['pedido_atualizado'] = False
+    registro_pedido = Pedido.objects.get(id=pk)
+    form = PedidoForm_2(request.POST or None, instance=registro_pedido)
+    if form.is_valid():
+        form.save()
+        request.session['pedido_atualizado'] = True
+        return HttpResponseRedirect(f'/atualizar-pedido/{pk}')
+    
+    return render(request, 'update_obs.html', {'registro_pedido':registro_pedido, 'form':form})
+
 def delete_pedido(request, pk):
     if request.user.is_authenticated:
         registro_pedido = Pedido.objects.get(id=pk)

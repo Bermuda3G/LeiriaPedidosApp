@@ -5,7 +5,7 @@
 <center>
     <h1>Registro de Pedido</h1>
     <h3>{{ registro_pedido }}</h3><br/>
-    <a href="#" class="btn btn-secondary" role="button">Atualizar Pedido</a>
+    <a href="{% url 'atualizar-pedido' registro_pedido.id %}" class="btn btn-secondary" role="button">Atualizar Pedido</a>
     <a href="{% url 'deletar-pedido' registro_pedido.id %}" class="btn btn-outline-danger" role="button">Excluir Pedido</a>
 </center>
 

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<center>
+    <h1>Atualizar Observações do Pedido</h1><br/>
+    {% if updated %}
+        Pedido atualizado com sucesso!
+        <a href="{% url 'homepage' %}" class="btn btn-secondary">Voltar</a>
+    {% else %}
+        <h2>{{ registro_pedido }}</h2>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}<br/>
+            <input type="submit" value="Atualizar" class="btn btn-secondary">
+    {% endif %}
+</center>
+<br/><br/>
+{% endblock %}

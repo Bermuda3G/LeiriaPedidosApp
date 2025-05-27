@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<center>
+    <h1>Atualizar Item</h1>
+    <h2>{{ registro_item.produto.nome }}</h2>
+</center>
+<br/><br/>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Atualizar" class="btn btn-secondary">
+</form>
+<br/>
+
+
+{% endblock %}
