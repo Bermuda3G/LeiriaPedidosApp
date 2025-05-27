@@ -29,7 +29,7 @@ class Pedido(models.Model):
     valor = models.DecimalField(default=0.00, max_digits=6, decimal_places=2)
     data_entrega = models.DateField(null=True)
     hora_entrega = models.TimeField(null=True)
-    observacoes = models.TextField(max_length=100)
+    observacoes = models.TextField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return(f"Pedido #{self.id}")
