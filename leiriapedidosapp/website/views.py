@@ -110,8 +110,8 @@ def add_pedido_1(request):
         form = PedidoForm_1(request.POST)
         if form.is_valid():
             pedido = form.save()
-            request.session['pedido_id'] = pedido.id 
-            request.session['valor_total'] = 0
+            request.session['pedido_id'] = pedido.id
+            request.session['atualizando'] = False
             return redirect('add-item-pedido')
            
     else:
@@ -129,16 +129,15 @@ def add_item_pedido(request):
         if form.is_valid():
             item = form.save(commit=False)
             item.pedido_id = pk
-            #Calcula valor
-            valor_total = request.session.get('valor_total')
-            valor_total += float(item.produto.preco) * item.quantidade
-            request.session['valor_total'] = valor_total
-            #Fim do cálculo
             item.save()
             if 'add_more' in request.POST:
                 return redirect('add-item-pedido')
             elif 'next_step' in request.POST:
-                return redirect('add-obs')
+                if request.session.get('atualizando'):
+                    itens = ItemPedido.objects.filter(pedido_id=pk)
+                    return render(request, 'itens_to_update.html', {'itens':itens, 'pedido_id':pk})
+                else:
+                    return redirect('add-obs')
         
     else:
         form = ItemPedidoForm
@@ -148,10 +147,11 @@ def add_item_pedido(request):
 def add_pedido_obs(request):
     pk = request.session.get('pedido_id')
     pedido = Pedido.objects.get(id=pk)
+    itens = ItemPedido.objects.filter(pedido_id=pk)
     if request.method == "POST":
         form = PedidoForm_2(request.POST, instance=pedido)
         if form.is_valid():
-            pedido.valor = request.session.get('valor_total')
+            pedido.valor = calcula_valor(itens)
             pedido.data_entrega = form.cleaned_data['data_entrega']
             pedido.observacoes = form.cleaned_data['observacoes']
             form.save()
@@ -168,6 +168,7 @@ def update_pedido(request, pk):
     if form.is_valid():
         form.save()
         request.session['pedido_id'] = pk
+        request.session['atualizando'] = True
         return redirect('itens-a-atualizar')
     
     if updated:
@@ -196,8 +197,10 @@ def update_item_pedido(request, item_pk):
 def update_pedido_obs(request, pk):
     request.session['pedido_atualizado'] = False
     registro_pedido = Pedido.objects.get(id=pk)
+    itens = ItemPedido.objects.filter(pedido_id=pk)
     form = PedidoForm_2(request.POST or None, instance=registro_pedido)
     if form.is_valid():
+        registro_pedido.valor = calcula_valor(itens)
         form.save()
         request.session['pedido_atualizado'] = True
         return HttpResponseRedirect(f'/atualizar-pedido/{pk}')
@@ -213,3 +216,21 @@ def delete_pedido(request, pk):
     else:
         messages.success(request, "Não foi possível deletar o pedido. Faça login novamente!!")
         return redirect('homepage')
+    
+def delete_item_pedido(request, pk):
+    id_pedido = request.session.get('pedido_id')
+    itens = ItemPedido.objects.filter(pedido_id=id_pedido)
+    if request.user.is_authenticated:
+        item_pedido = ItemPedido.objects.get(id=pk)
+        item_pedido.delete()
+        messages.success(request, "Item deletado com sucesso!!")
+        return render(request, 'itens_to_update.html', {'itens':itens, 'pedido_id':id_pedido})
+    else:
+        messages.success(request, "Não foi possível deletar o item. Faça login novamente!!")
+        return redirect('homepage')
+    
+def calcula_valor(itens):
+    valor_total = 0
+    for item in itens:
+        valor_total += (float(item.produto.preco) * item.quantidade)
+    return valor_total

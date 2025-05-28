@@ -9,9 +9,12 @@
 <form action="" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Atualizar" class="btn btn-secondary">
+    <div>
+        <input type="submit" value="Atualizar" class="btn btn-secondary">
+        <a href="{% url 'deletar-item' registro_item.id %}" class="btn btn-outline-danger" role="button">Excluir Item</a>
+    </div>
+    
 </form>
 <br/>
-
 
 {% endblock %}
